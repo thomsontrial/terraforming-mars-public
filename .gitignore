@@ -8,6 +8,7 @@ tests/integration/.env
 .DS_Store
 src/genfiles/
 dist/
+build/
 *.swp
 .nyc_output/
 .vscode/
