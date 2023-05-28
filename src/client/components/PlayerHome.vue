@@ -1,6 +1,9 @@
 <template>
   <div id="player-home" :class="(game.turmoil ? 'with-turmoil': '')">
-    <top-bar :playerView="playerView" />
+    <top-bar :playerView="playerView"
+      :acting_player="isPlayerActing(playerView)"
+      :player_color="thisPlayer.color"
+    />
 
     <div v-if="game.phase === 'end'">
       <div class="player_home_block">

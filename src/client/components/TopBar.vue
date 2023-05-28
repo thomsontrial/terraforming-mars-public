@@ -4,6 +4,7 @@
       <div class="top-bar-collapser" v-on:click="toggleBar()">
         <img src="assets/arrows_left.png">
       </div>
+      <div :class="'player-turn-notifier player_bg_color_' + player_color" v-show="acting_player">Your Turn</div>
     </div>
 </template>
 
@@ -13,12 +14,19 @@ import Vue from 'vue';
 import {PlayerViewModel} from '@/common/models/PlayerModel';
 import PlayerInfo from '@/client/components/overview/PlayerInfo.vue';
 import {getPreferences, PreferencesManager} from '@/client/utils/PreferencesManager';
+import {Color} from '@/common/Color';
 
 export default Vue.extend({
   name: 'top-bar',
   props: {
     playerView: {
       type: Object as () => PlayerViewModel,
+    },
+    acting_player: {
+      type: Boolean,
+    },
+    player_color: {
+      type: String as () => Color,
     },
   },
   components: {
