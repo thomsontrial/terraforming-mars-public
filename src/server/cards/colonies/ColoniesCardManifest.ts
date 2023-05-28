@@ -18,12 +18,14 @@ import {ProductiveOutpost} from './ProductiveOutpost';
 import {QuantumCommunications} from './QuantumCommunications';
 import {ResearchColony} from './ResearchColony';
 import {RimFreighters} from './RimFreighters';
+import {SkyDocks} from './SkyDocks';
 import {SpacePort} from './SpacePort';
 import {SpacePortColony} from './SpacePortColony';
 import {StormCraftIncorporated} from './StormCraftIncorporated';
 import {TitanFloatingLaunchPad} from './TitanFloatingLaunchPad';
 import {TradeEnvoys} from './TradeEnvoys';
 import {TradingColony} from './TradingColony';
+import {UrbanDecomposers} from './UrbanDecomposers';
 import {BuildColonyStandardProject} from './BuildColonyStandardProject';
 
 export const COLONIES_CARD_MANIFEST = new ModuleManifest({
@@ -44,11 +46,13 @@ export const COLONIES_CARD_MANIFEST = new ModuleManifest({
     [CardName.QUANTUM_COMMUNICATIONS]: {Factory: QuantumCommunications},
     [CardName.RESEARCH_COLONY]: {Factory: ResearchColony},
     [CardName.RIM_FREIGHTERS]: {Factory: RimFreighters},
+    [CardName.SKY_DOCKS]: {Factory: SkyDocks},
     [CardName.SPACE_PORT]: {Factory: SpacePort},
     [CardName.SPACE_PORT_COLONY]: {Factory: SpacePortColony},
     [CardName.TITAN_FLOATING_LAUNCHPAD]: {Factory: TitanFloatingLaunchPad},
     [CardName.TRADING_COLONY]: {Factory: TradingColony},
     [CardName.TRADE_ENVOYS]: {Factory: TradeEnvoys},
+    [CardName.URBAN_DECOMPOSERS]: {Factory: UrbanDecomposers},
   },
   standardProjects: {
     [CardName.BUILD_COLONY_STANDARD_PROJECT]: {Factory: BuildColonyStandardProject},
