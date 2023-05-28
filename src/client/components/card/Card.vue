@@ -70,6 +70,11 @@ export default Vue.extend({
       type: Object as () => CardModel | undefined,
       required: false,
     },
+    playable: {
+      type: Boolean,
+      required: false,
+      default: true,
+    },
   },
   data() {
     const cardName = this.card.name;
@@ -110,6 +115,11 @@ export default Vue.extend({
     getCardClasses(card: CardModel): string {
       const classes = ['card-container', 'filterDiv', 'hover-hide-res'];
       classes.push('card-' + card.name.toLowerCase().replace(/ /g, '-'));
+      const type = this.getCardType();
+
+      if (!this.playable && type !== CardType.PRELUDE) {
+        classes.push('card-not-playable');
+      }
 
       if (this.actionUsed || card.isDisabled) {
         classes.push('card-unavailable');

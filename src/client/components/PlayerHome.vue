@@ -97,6 +97,7 @@
           <div class="text-overview" v-i18n>[ toggle cards in hand ]</div>
         </div>
         <sortable-cards v-show="isVisible('HAND')" :playerId="playerView.id"
+                        :playableCards="playerView.playableCards"
                         :cards="playerView.preludeCardsInHand
                                 .concat(playerView.ceoCardsInHand)
                                 .concat(playerView.cardsInHand)"/>

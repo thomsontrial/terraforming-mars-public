@@ -50,6 +50,7 @@ export interface SerializedPlayer extends DeprecatedFields{
     plants: number;
     plantsNeededForGreenery: number;
     playedCards: Array<SerializedCard>;
+    playableCards: Array<CardName>;
     politicalAgendasActionUsedCount: number;
     preludeCardsInHand: Array<CardName>;
     removedFromPlayCards: Array<CardName>;

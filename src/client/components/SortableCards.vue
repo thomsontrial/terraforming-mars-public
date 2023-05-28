@@ -16,6 +16,9 @@ export default Vue.extend({
     playerId: {
       type: String,
     },
+    playableCards: {
+      type: Array as () => Array<CardModel>,
+    },
   },
   data() {
     const cache = CardOrderStorage.getCardOrder(this.playerId);
@@ -45,6 +48,15 @@ export default Vue.extend({
         this.cardOrder,
         this.cards,
       );
+    },
+    isPlayableCard(card: CardModel) {
+      let isPlayable = false;
+      for (const tempCard of this.playableCards) {
+        if (tempCard.name === card.name) {
+          isPlayable = true;
+        }
+      }
+      return isPlayable;
     },
     onDragStart(source: string): void {
       this.dragCard = source;
@@ -85,7 +97,7 @@ export default Vue.extend({
     <div ref="draggers" :class="{ 'dragging': Boolean(dragCard) }" v-for="card in getSortedCards()" :key="card.name" draggable="true" v-on:dragend="onDragEnd()" v-on:dragstart="onDragStart(card.name)">
       <div v-if="dragCard" ref="droppers" class="drop-target" v-on:dragover="onDragOver(card.name)"></div>
       <div ref="cardbox" class="cardbox">
-        <Card :card="card"/>
+        <Card :card="card" :playable="isPlayableCard(card)"/>
       </div>
     </div>
     <div v-if="dragCard" ref="dropend" class="drop-target" v-on:dragover="onDragOver('end')"></div>

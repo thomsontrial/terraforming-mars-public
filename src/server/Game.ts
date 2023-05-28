@@ -799,6 +799,7 @@ export class Game implements Logger {
   public playerIsFinishedWithResearchPhase(player: Player): void {
     this.deferredActions.runAllFor(player, () => {
       this.researchedPlayers.add(player.id);
+      player.updatePlayableCards();
       if (this.allPlayersHaveFinishedResearch()) {
         this.phase = Phase.ACTION;
         this.passedPlayers.clear();

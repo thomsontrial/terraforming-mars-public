@@ -71,6 +71,7 @@ export type PublicPlayerModel = {
 /** A player's view of the game, including their secret information. */
 export interface PlayerViewModel extends ViewModel {
   cardsInHand: Array<CardModel>;
+  playableCards: Array<CardModel>;
   dealtCorporationCards: Array<CardModel>;
   dealtPreludeCards: Array<CardModel>;
   dealtProjectCards: Array<CardModel>;

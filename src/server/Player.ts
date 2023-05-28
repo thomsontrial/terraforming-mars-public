@@ -131,6 +131,7 @@ export class Player {
   public preludeCardsInHand: Array<IProjectCard> = [];
   public ceoCardsInHand: Array<IProjectCard> = [];
   public playedCards: Array<IProjectCard> = [];
+  public playableCards: Array<IProjectCard> = [];
   public draftedCards: Array<IProjectCard> = [];
   public draftedCorporations: Array<ICorporationCard> = [];
   public cardCost: number = constants.CARD_COST;
@@ -753,6 +754,8 @@ export class Player {
         card.opgActionIsActive = false;
       }
     }
+
+    this.updatePlayableCards();
   }
 
   private doneWorldGovernmentTerraforming(): void {
@@ -892,6 +895,10 @@ export class Player {
           return undefined;
         }, {min: cardsToKeep, max: cardsToKeep, played: false}),
     );
+  }
+
+  public updatePlayableCards(): void {
+    this.playableCards = this.getPlayableCards();
   }
 
   /**
@@ -1092,6 +1099,8 @@ export class Player {
       } else if (preludeCardIndex !== -1) {
         this.preludeCardsInHand.splice(preludeCardIndex, 1);
       }
+
+      this.playableCards = this.getPlayableCards();
 
       // Remove card from Self Replicating Robots
       const card = this.playedCards.find((card) => card.name === CardName.SELF_REPLICATING_ROBOTS);
@@ -1412,7 +1421,9 @@ export class Player {
       }
     }
 
-    return candidateCards.filter((card) => this.canPlay(card));
+    this.playableCards = candidateCards.filter((card) => this.canPlay(card));
+
+    return this.playableCards;
   }
 
   // TODO(kberg): After migration, see if this can become private again.
@@ -1592,6 +1603,7 @@ export class Player {
 
     if (game.deferredActions.length > 0) {
       game.deferredActions.runAll(() => this.takeAction());
+      this.updatePlayableCards();
       return;
     }
 
@@ -1607,6 +1619,7 @@ export class Player {
         LogHelper.logDiscardedCards(game, this.preludeCardsInHand);
         this.preludeCardsInHand = [];
         game.playerIsFinishedTakingActions();
+        this.updatePlayableCards();
         return;
       }
 
@@ -1617,6 +1630,7 @@ export class Player {
           game.playerIsFinishedTakingActions();
         }
       });
+      this.updatePlayableCards();
       return;
     } else if (this.ceoCardsInHand.length > 0) {
       // The CEO phase occurs between the Prelude phase and before the Action phase.
@@ -1630,6 +1644,7 @@ export class Player {
       }
       // Null out ceoCardsInHand, anything left was unplayable.
       this.ceoCardsInHand = [];
+      this.updatePlayableCards();
       this.takeAction(); // back to top
     } else {
       game.phase = Phase.ACTION;
@@ -1640,6 +1655,7 @@ export class Player {
       this.availableActionsThisRound = 2;
       game.resettable = true;
       game.playerIsFinishedTakingActions();
+      this.updatePlayableCards();
       return;
     }
 
@@ -1664,6 +1680,7 @@ export class Player {
           corp.initialActionText, () => {
             this.runInitialAction(corp);
             this.pendingInitialActions.splice(this.pendingInitialActions.indexOf(corp), 1);
+            this.updatePlayableCards();
             return undefined;
           });
         orOptions.options.push(option);
@@ -1674,14 +1691,17 @@ export class Player {
       this.setWaitingFor(orOptions, () => {
         this.actionsTakenThisRound++;
         this.actionsTakenThisGame++;
+        this.updatePlayableCards();
         // TODO(kberg): implement this?
         // this.timer.rebateTime(constants.BONUS_SECONDS_PER_ACTION);
         this.takeAction();
       });
+      this.updatePlayableCards();
       return;
     }
 
     this.setWaitingFor(this.getActions(), () => {
+      this.updatePlayableCards();
       this.incrementActionsTaken();
       this.takeAction();
     });
@@ -1813,6 +1833,8 @@ export class Player {
       action.options.push(new UndoActionOption());
     }
 
+    this.updatePlayableCards();
+
     return action;
   }
 
@@ -1928,6 +1950,7 @@ export class Player {
       ceoCardsInHand: this.ceoCardsInHand.map((c) => c.name),
       playedCards: this.playedCards.map(serializeProjectCard),
       draftedCards: this.draftedCards.map((c) => c.name),
+      playableCards: this.playableCards.map((c) => c.name),
       cardCost: this.cardCost,
       needsToDraft: this.needsToDraft,
       cardDiscount: this.colonies.cardDiscount,
@@ -2053,6 +2076,7 @@ export class Player {
     player.ceoCardsInHand = cardFinder.ceosFromJSON(d.ceoCardsInHand);
     player.playedCards = d.playedCards.map((element: SerializedCard) => deserializeProjectCard(element, cardFinder));
     player.draftedCards = cardFinder.cardsFromJSON(d.draftedCards);
+    player.playableCards = cardFinder.cardsFromJSON(d.playableCards);
 
     player.timer = Timer.deserialize(d.timer);
 
