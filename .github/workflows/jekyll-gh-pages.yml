@@ -34,6 +34,7 @@ jobs:
           node-version: '14'
       - run: npm install
       - run: npm run build
+      - run: ls
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
